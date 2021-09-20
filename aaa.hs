@@ -3,6 +3,8 @@
 -- xs<-gl @LV @(Moji)  n
 -- VU.zip3 w (VU.drop 1 w) (VU.drop 2 w) 3つずつにわける
 --  V.modify (VAM.sortBy (\x y -> compare (snd y) (snd x)))
+
+
 --  xs<- CM.replicateM n $ do
 --         [a,b]<-words <$> getLine
 --         return (a,read b :: Int)
@@ -51,6 +53,9 @@
     --     putStr "otsu!!"
 
 -- main=getLine>>=print.foldr(max.read)0.words最大
+
+-- main=interact$show.foldr(lcm.read)1.words LCM
+
 -- import Data.List;main=print.length.filter(isPrefixOf"ZONe").tails=<<getLine
 -- VU.thaw :: (VU.Unbox a, PrimMonad m) =>
 -- VU.Vector a -> m (VUM.MVector (PrimState m) a
@@ -270,6 +275,8 @@ mpqInsert mpq n p = MutVar.modifyMutVar' mpq (PSQ.insert n p ())
 -----------
 -- Graph --
 -----------
+while :: Monad m => m Bool -> m ()
+while f = f >>= \frag -> M.when frag $ while f
 type Graph a = V.Vector [(Int, a)]
 type UGraph = Graph ()
 
@@ -320,4 +327,67 @@ dfs g i = ST.runST do
       childs <- M.mapM loop nexts
       return $ Tree.Node now childs
   loop i
+
+data ViewInf a = Infinity | Finity a
+
+newtype Inf a = Inf (V.Vector a) deriving Eq
+
+instance ReadBS a => ReadBS (Inf a) where
+  readBS = Inf . readBS
+
+instance ShowBS a => ShowBS (Inf a) where
+  showBS (Inf xs) = showBS xs
+
+instance (Num a, Ord a) => Num (Inf a) where
+  (Inf xs) + (Inf ys) = infMold . Inf $ zs
+    where
+    lx = V.length xs - 1
+    ly = V.length ys - 1
+    zs = V.map f [0 .. max lx ly]
+    f i = xs .! i + ys .! i
+  (Inf xs) * (Inf ys) = infMold . Inf $ zs
+    where
+    lx = V.length xs - 1
+    ly = V.length ys - 1
+    zs = V.map f [0 .. lx + ly]
+    f i = V.sum . V.map g $ [0 .. i]
+      where
+      g j = xs .! j * ys .! (i - j)
+  negate (Inf xs) = Inf . V.map negate $ xs
+  abs n = if n >= 0 then n else - n
+  signum n = if n >= 0 then 1 else - 1
+  fromInteger n = Inf [fromInteger n]
+
+instance (Num a, Ord a) => Ord (Inf a) where
+  compare (Inf xs) (Inf ys)
+    | l == -1 = EQ
+    | xs .! l == ys .! l = compare (Inf (V.init xs)) (Inf (V.init ys))
+    | otherwise = compare (xs .! l) (ys .! l)
+    where
+    l = max (V.length xs) (V.length ys) - 1
+
+(.!) :: (VG.Vector v p, Num p) => v p -> Int -> p
+xs .! i
+  | i >= 0 && i < VG.length xs = xs ! i
+  | otherwise = 0
+
+infinity :: Num a => Inf a
+infinity = Inf [0, 1]
+
+fromInf :: (Eq a, Num a) => Inf a -> ViewInf a
+fromInf (Inf xs)
+  | V.length xs == 1 = Finity $ xs ! 0
+  | otherwise = Infinity
+
+infMold :: (Num a, Eq a) => Inf a -> Inf a
+infMold (Inf xs) = Inf . dropWhileRev (== 0) $ xs
+
+dropWhileRev :: VG.Vector v a => (a -> Bool) -> v a -> v a
+dropWhileRev f xs
+  | VG.null xs = VG.empty
+  | f x = dropWhileRev f xs'
+  | otherwise = xs
+  where
+  x = VG.last xs
+  xs' = VG.init xs
 
