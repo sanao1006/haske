@@ -1,37 +1,17 @@
-## Welcome to GitHub Pages
+# 競技プログラミング用Haskellライブラリ
+使えるものからおもちゃまで用意していきたい。充実させてく
 
-You can use the [editor on GitHub](https://github.com/sanao1006/haske/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## 数学系
+- [エラトスネテスの篩](src/math/sieveOfEra.hs)
+- [約数列挙](src/math/divisor.hs)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## データ構造
+- [優先度付きキュー](src/structure/priorityQueue.hs)
 
-### Markdown
+## 組み合わせ系
+- [約数列挙](src/combi/nextPermitation.hs)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## 使えるか分からん系
+- [部分文字列](src/other/deleteBlanck.hs)
+- [空白削除](src/other/segments.hs)
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/sanao1006/haske/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
