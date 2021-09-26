@@ -12,5 +12,5 @@
 - [約数列挙](src/combi/nextPermitation.hs)
 
 ## 使えるか分からん系
-- [部分文字列](src/other/deleteBlanck.hs)
-- [空白削除](src/other/segments.hs)
+- [部分文字列](src/other/segments.hs)
+- [空白削除](src/other/deleteBlanck.hssrc/other/segments.hs)
